@@ -1,0 +1,4 @@
+rootProject.name = 'java_io_study'
+include 'ver1'
+findProject(':ver1')?.name = 'java_io_study'
+
