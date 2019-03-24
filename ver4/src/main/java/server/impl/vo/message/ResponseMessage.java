@@ -23,7 +23,8 @@ public class ResponseMessage implements Message{
 
     String message;
 
-    ChatUser chatUser;
+    ChatUser receiveChatUser;
+    ChatUser messageSendChatUser;
 
 
     public MessageState getMessageState() {
@@ -50,10 +51,13 @@ public class ResponseMessage implements Message{
         return correct;
     }
 
-    public ChatUser getChatUser() {
-        return chatUser;
+    public ChatUser getReceiveChatUser() {
+        return receiveChatUser;
     }
 
+    public ChatUser getMessageSendChatUser() {
+        return messageSendChatUser;
+    }
 
     public ResponseMessage setCorrect(boolean correct) {
         this.correct = correct;
@@ -85,8 +89,13 @@ public class ResponseMessage implements Message{
         return this;
     }
 
-    public ResponseMessage setChatUser(ChatUser chatUser) {
-        this.chatUser = chatUser;
+    public ResponseMessage setReceiveChatUser(ChatUser receiveChatUser) {
+        this.receiveChatUser = receiveChatUser;
+        return this;
+    }
+
+    public ResponseMessage setMessageSendChatUser(ChatUser messageSendChatUser) {
+        this.messageSendChatUser = messageSendChatUser;
         return this;
     }
 
@@ -99,7 +108,7 @@ public class ResponseMessage implements Message{
                 ", chatRoomId=" + chatRoomId +
                 ", chatRoomTitle='" + chatRoomTitle + '\'' +
                 ", message='" + message + '\'' +
-                ", chatUser=" + chatUser +
+                ", receiveChatUser=" + receiveChatUser +
                 '}';
     }
 }

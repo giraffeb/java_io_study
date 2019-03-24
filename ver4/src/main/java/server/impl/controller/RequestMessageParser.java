@@ -39,7 +39,6 @@ public class RequestMessageParser {
      */
     public void init(){
         this.chatUserRepository = new ChatUserRepository();
-        this.chatUserRepository.saveChatUser(new ChatUser().setId("hello").setPw("hello"));
 
         this.loginChatUserRepository = new LoginChatUserRepository();
 
@@ -61,6 +60,11 @@ public class RequestMessageParser {
     public void parseMessage(RequestMessage requestMessage){
 
         switch (requestMessage.getState()){
+            case CREATE_USER:
+                LOG.debug("CREATE USER CASE");
+                doCreateChatUser(requestMessage);
+                break;
+
             case LOGIN:
                 LOG.debug("parseMessage LOGIN CASE!");
                 doLogin(requestMessage);
@@ -152,18 +156,11 @@ public class RequestMessageParser {
 
         ChatUser targetUser = null;
         for(SocketChannel cur : curChatRoom.getUserSocketChannelList()){
-            targetUser = this.loginChatUserRepository.findByChatUserSocketChannel(cur);
 
             if(cur == requestMessage.getSenderSocketChannel()){
                 continue;
             }
-            if(targetUser == null){
-                LOG.debug("#TARGET USER NULL : "+requestMessage);
-                this.loginChatUserRepository.printUserList();
-                LOG.debug("#TARGET END");
-            }
-
-            responseMessage.setChatUser(targetUser);
+            responseMessage.setMessageSendChatUser(requestMessage.getChatUser());
             this.simpleMessageFactory.sendResponseMessage(cur, sendBuffer, responseMessage);
         }
 
@@ -285,6 +282,22 @@ public class RequestMessageParser {
         this.simpleMessageFactory.sendResponseMessage(requestMessage.getSenderSocketChannel(), requestMessage.getByteBuffer(), responseMessage);
 
 
+    }
+
+    public void doCreateChatUser(RequestMessage requestMessage){
+
+        ChatUser newChatUser = new ChatUser()
+                                    .setId(requestMessage.getChatUser().getId())
+                                    .setPw(requestMessage.getChatUser().getPw());
+
+        this.chatUserRepository.saveChatUser(newChatUser);
+
+        ResponseMessage responseMessage = new ResponseMessage()
+                                            .setMessageState(MessageState.CREATE_USER)
+                                            .setCorrect(true)
+                                            .setReceiveChatUser(newChatUser);
+
+        this.simpleMessageFactory.sendResponseMessage(requestMessage.getSenderSocketChannel(), requestMessage.getByteBuffer(), responseMessage);
     }
 
 

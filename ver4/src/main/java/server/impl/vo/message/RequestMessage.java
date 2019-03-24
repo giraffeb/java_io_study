@@ -96,7 +96,7 @@ public class RequestMessage implements Message{
                 ", state=" + state +
                 ", chatRoomTitle='" + chatRoomTitle + '\'' +
                 ", ChatRoomId=" + ChatRoomId +
-                ", chatUser=" + chatUser +
+                ", receiveChatUser=" + chatUser +
                 ", message='" + message + '\'' +
                 '}';
     }

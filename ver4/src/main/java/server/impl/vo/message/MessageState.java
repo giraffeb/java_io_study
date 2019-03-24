@@ -7,6 +7,6 @@ package server.impl.vo.message;
  */
 public enum MessageState {
 
-    LOGIN, MESSAGE, CHAT_ROOM_LIST, CHAT_ROOM_JOIN, CHAT_ROOM_CREATE
+    LOGIN, MESSAGE, CHAT_ROOM_LIST, CHAT_ROOM_JOIN, CHAT_ROOM_CREATE, CREATE_USER
 
 }

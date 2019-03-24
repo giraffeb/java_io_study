@@ -48,11 +48,37 @@ public class ClientStarter {
 
     public void start(){
 
-        if( doLogin() == true){
+        if( printLoginCommand() == true){
             printCommand();
         }
     }
 
+    public boolean printLoginCommand(){
+        System.out.println("LOGIN or CREATE USER");
+        System.out.println("0. LOGIN");
+        System.out.println("1. CREATE USER");
+
+        System.out.print("input : ");
+
+        int cmd = this.scanner.nextInt();
+        this.scanner.nextLine();
+
+        boolean flag = false;
+
+        switch (cmd){
+            case 0:
+                flag = doLogin();
+                break;
+            case 1:
+                flag = createChatUser();
+                if(flag == true){
+                    flag = doLogin();
+                }
+                break;
+        }
+
+        return flag;
+    }
 
 
     public void printCommand(){
@@ -98,7 +124,7 @@ public class ClientStarter {
                 System.exit(1);
             }
 
-            System.out.println("INPUT ID/PW");
+            System.out.println("LOGIN INPUT ID/PW");
             System.out.print("ID : ");
             String id = this.scanner.nextLine();
             System.out.print("PW : ");
@@ -205,6 +231,39 @@ public class ClientStarter {
 
     }
 
+    public boolean createChatUser(){
+        LOG.debug("createChatUser");
+
+        System.out.println("CREATE USER INPUT ID, PW");
+
+        System.out.print("ID : ");
+        String id = this.scanner.nextLine();
+
+        System.out.print("PW : ");
+        String pw = this.scanner.nextLine();
+
+        ChatUser newChatUser = new ChatUser().setId(id)
+                                            .setPw(pw);
+
+        RequestMessage requestMessage = new RequestMessage()
+                                            .setState(MessageState.CREATE_USER)
+                                            .setChatUser(newChatUser);
+
+        this.simpleMessageFactory.sendRequestMessage(this.socketChannel, this.byteBuffer, requestMessage);
+
+        ResponseMessage responseMessage = this.simpleMessageFactory.readResponseMessage(this.socketChannel,this.byteBuffer);
+
+        if(responseMessage.getMessageState() == MessageState.CREATE_USER &&
+            responseMessage.isCorrect() == true){
+            this.me = newChatUser;
+            return true;
+        }else{
+            return false;
+        }
+
+
+    }
+
 
     public void doMessage(){
         LOG.debug("doMessage");
@@ -225,7 +284,7 @@ public class ClientStarter {
                 if(responseMessage != null)
                     if(responseMessage.getMessage() != null){
                         LOG.debug(responseMessage.toString());
-                        System.out.println(responseMessage.getChatUser().getId() + " : " + responseMessage.getMessage());
+                        System.out.println(responseMessage.getMessageSendChatUser().getId() + " :: " + responseMessage.getMessage());
                     }
                 if(socketChannel.isConnected() == false){
                     System.exit(1);

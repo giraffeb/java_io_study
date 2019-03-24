@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.impl.vo.chat.ChatUser;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,8 +22,13 @@ public class ChatUserRepository {
     static Logger LOG = LoggerFactory.getLogger(ChatUserRepository.class);
     Map<Integer, ChatUser> chatuserList;
 
+    File db;
+
     public void init(){
+
         this.chatuserList = new LinkedHashMap<>();
+        this.db = new File("chatUser.db");
+        this.readFile();
     }
 
     public ChatUserRepository() {
@@ -69,7 +75,10 @@ public class ChatUserRepository {
     }
 
     public void saveChatUser(ChatUser newChatUser){
+
         this.chatuserList.put(newChatUser.hashCode(), newChatUser);
+
+        this.saveFile();
     }
 
     public void deleteChatUserById(String id){
@@ -98,5 +107,30 @@ public class ChatUserRepository {
         this.chatuserList.remove(targetUid);
     }
 
+    public void readFile(){
+        ObjectInputStream objectInputStream;
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream(this.db));
+            this.chatuserList = (Map<Integer, ChatUser>)objectInputStream.readObject();
+            objectInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveFile(){
+        ObjectOutputStream objectOutputStream;
+
+        try {
+            objectOutputStream = new ObjectOutputStream(new FileOutputStream(this.db));
+            objectOutputStream.writeObject(this.chatuserList);
+            objectOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

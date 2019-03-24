@@ -7,10 +7,10 @@
     </appender>
 
     <logger name="server" level="DEBUG"/>
-    <logger name="client" level="DEBUG"/>
+    <logger name="client" level="INFO"/>
 
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 
