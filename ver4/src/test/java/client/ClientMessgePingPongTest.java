@@ -6,6 +6,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.impl.io.SimpleMessageFactory;
+import server.impl.vo.chat.ChatUser;
 import server.impl.vo.message.MessageState;
 import server.impl.vo.message.RequestMessage;
 import server.impl.vo.message.ResponseMessage;
@@ -31,7 +32,7 @@ public class ClientMessgePingPongTest {
         socketChannel.configureBlocking(true);
         ByteBuffer byteBuffer = ByteBuffer.allocate(Message.MESSAGE_BUFFER_SIZE);
 
-        RequestMessage requestMessage = new RequestMessage().setState(MessageState.LOGIN).setId("Hello").setPw("new World");
+        RequestMessage requestMessage = new RequestMessage().setState(MessageState.LOGIN).setChatUser(new ChatUser().setId("Hello").setPw("new World"));
 
         LOG.debug(requestMessage.toString());
         SimpleMessageFactory simpleMessageFactory = new SimpleMessageFactory();
