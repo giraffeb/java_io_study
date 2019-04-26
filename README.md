@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/giraffeb/java_io_study.svg?branch=master)](https://travis-ci.org/giraffeb/java_io_study)
+
 # Java IO 학습내용 기록하기
 
 ## 목적
